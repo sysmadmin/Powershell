@@ -1,0 +1,19 @@
+function Get-PCOwner {
+
+<#
+    Used to quickly get the name of the PC a specific employee uses
+    Based off of the Computer list(copy of, located in below directory), not current logged in accounts
+#>
+
+[CmdletBinding()]
+
+param(
+    [Parameter(Mandatory=$True,Position=0)]
+    [string]$name
+    )
+
+$spreadsheet = Import-Csv 'PCList.csv'
+
+Write-Output $spreadsheet | ? {$_.comments -like "*$name*"} | select -prop name,comments
+
+}
