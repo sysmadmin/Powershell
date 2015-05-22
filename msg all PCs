@@ -1,0 +1,52 @@
+$RECIPIENTS = ""
+$RECRESP =""
+$MSG = ""
+$RESPONSE = ""
+
+$LOC1 = (Get-Content 'LOC1.txt')
+$LOC2 = (Get-Content 'LOC2.txt')
+$LOC3 = (Get-Content 'LOC3.txt')
+$LOC4 = (Get-Content 'LOC4.txt')
+$LOC5 = (Get-Content 'LOC5.txt')
+$LOC6 = (Get-Content 'LOC6.txt')
+$LOC7 = (Get-Content 'LOC7.txt')
+
+do {
+        $RECIPIENTS = Read-Host "Who would you like to send this message to? `n1-LOC1`n2-LOC2`n3-LOC3`n4-LOC4`n5-LOC5`n6-LOC6`n7-LOC7`n8-All Locations`nPlease enter corresponding numbers"
+            #Variable declarations moved within the do-while so they are reset if the do starts over
+            $LIST = ("","")
+            $VER = ""
+            #assigning the variables to the numbers chosen by the user. This is working, but should be replaced with a cleaner (loop?) process
+            #also adding the text to VER so the user can verify their choices
+            if ($RECIPIENTS -like "*1*")   {$LIST += $LOC1; $VER += " LOC1,"}
+            if ($RECIPIENTS -like "*2*")   {$LIST += $LOC2; $VER += " LOC2,"}
+            if ($RECIPIENTS -like "*3*")   {$LIST += $LOC3; $VER += " LOC3,"}
+            if ($RECIPIENTS -like "*4*")   {$LIST += $LOC4; $VER += " LOC4,"}
+            if ($RECIPIENTS -like "*5*")   {$LIST += $LOC5; $VER += " LOC5,"}
+            if ($RECIPIENTS -like "*6*")   {$LIST += $LOC6; $VER += " LOC6,"}
+            if ($RECIPIENTS -like "*7*")   {$LIST += $LOC7; $VER += " LOC7,"}
+            if ($RECIPIENTS -like "*8*")   {$LIST += $LOC1, $LOC2, $LOC3, $LOC4, $LOC5, $LOC6, $LOC7; $VER += "All Locations,"}
+            
+    $RECRESP = Read-Host "You have selected $VER is that correct? YES/NO"
+    while (($RECRESP -ne "YES") -and ($RECRESP -ne "Y") -and ($RECRESP -ne "NO") -and ($RECRESP -ne "N"))
+        {
+            $RECRESP = Read-Host "$RECRESP is not an accepted response, please enter YES or NO"
+        }
+    }
+while (($RECRESP -ne "YES") -and ($RECRESP -ne "Y"))
+
+do {
+        $MSG = Read-Host "What would you like the message to say?"
+        $RESPONSE = Read-Host "You have entered`n   $MSG`nis that correct? YES/NO"
+        while (($RESPONSE -ne "YES") -and ($RESPONSE -ne "Y") -and ($RESPONSE -ne "NO") -and ($RESPONSE -ne "N"))
+        {
+            $RESPONSE = Read-Host "$RESPONSE is not an accepted response, please enter YES or NO"
+        }
+    }
+while (($RESPONSE -ne "YES") -and ($RESPONSE -ne "Y"))
+#Issue with message being sent 2 extra times to my PC, after clearing variables as well as not sending it to my PC at all.
+#Code block
+foreach ($q in $LIST) 
+    {
+        msg * /server:$($q) "$MSG"
+    }
