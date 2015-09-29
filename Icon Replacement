@@ -1,0 +1,51 @@
+function Replace-Icons {
+
+<#
+.SYNOPSIS
+Used to add, remove, or replace an icon that resides on all desktops
+Currently set up to replace just items in the Public\Desktop folder, as users may have added certain shortcuts that should not be removed
+#>
+
+[CmdletBinding()]
+
+param(
+[Parameter(Position=0,Mandatory=$False)]
+[string]$Remove = '',
+[Parameter(Position=0,Mandatory=$False)]
+[string]$Add = ''
+)
+$PCList = (Get-Content 'PCList.txt')
+
+foreach ($pc in $PCList){
+    if (Test-Path "\\$pc\c$\users\public\desktop\$remove")
+    {
+        Remove-Item "\\$pc\c$\users\public\desktop\$remove"
+        Write-Output "File found"
+        if (-not(Test-Path "\\$pc\c$\users\public\desktop\$remove"))
+        {
+            Write-Output "File $remove on $pc was successfully removed"
+        }
+        else
+        {
+            Write-Output "File $remove on $pc was not removed"
+        }
+    }
+
+    if ($Add -ne '')
+    {
+        Copy-Item -Destination "\\$pc\c$\users\public\desktop\" -Path $Add
+        if (-not(Test-Path "\\$pc\c$\users\public\desktop\$Add"))
+        {
+            Write-Output "$Add was successfully copied to $pc"
+        }
+        else
+        {
+            Write-Output "$Add was not copied to $pc"
+        }
+    }
+    else
+    {
+        Write-Output "There was no file selected to add"
+    }
+}
+}
