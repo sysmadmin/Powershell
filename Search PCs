@@ -1,0 +1,7 @@
+# Replace the below keywords (one/two/three/etc) with the sought after file name on org PCs
+
+$PCList = (Get-Content PCList.txt)
+
+foreach ($PC in $PCList){
+    Invoke-Command -ComputerName $PC -ScriptBlock {Get-ChildItem C:\Users -Recurse | ? {$_.name -match "(one|two|three|etc)"}}
+}
