@@ -1,0 +1,13 @@
+# Gather 24 hours of org PCs errors and email them
+
+$Date = get-date -UFormat "%Y%m%d"
+$PCList = Get-Content PCList.txt
+$DateRange = ((get-date).addDays(-1))
+
+get-eventlog -logname Application -EntryType error -after $DateRange -computername $PCList | export-csv Results.csv
+get-eventlog -logname System -EntryType error -after $DateRange -computername $PCList | export-csv Results2.csv
+
+Send-MailMessage -To  -From  -Subject "System Events" -Attachments Results.csv,Results2.csv
+
+Remove-Item Results.csv
+Remove-Item Results2.csv
