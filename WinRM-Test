@@ -1,0 +1,9 @@
+# Tests WinRM on Remote PCs; successful tests display a random number, failures have an error
+
+$computerlist = (Get-Content 'PCLISTPATH.txt')
+
+foreach ($pc in $computerlist)
+{
+    $n = (Invoke-Command -ComputerName $pc -ScriptBlock {Get-Random})
+    Write-Host "$pc : $n"
+}
