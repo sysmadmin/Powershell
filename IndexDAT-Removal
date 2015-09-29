@@ -1,0 +1,23 @@
+# Index.DAT files piling up due to pdf dl failures from website, needs to be cleared daily to prevent unnecessary IE slowdown
+
+$PCList = (Get-Content PCList.txt)
+
+foreach ($PC in $PCList)
+{
+    Invoke-Command -ComputerName $PC -ScriptBlock {
+        $UserList = Get-ChildItem C:\Users\ 
+
+        foreach ($User in $UserList)
+        {
+            try 
+            {
+                Remove-Item C:\Users\$User\appdata\roaming\microsoft\windows\iedownloadhistory\index.dat -Force
+            } 
+            
+            catch [System.Exception]
+            {
+                $val = ('Couldn''t remove file')
+            }
+        }
+    }
+}
