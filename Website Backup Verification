@@ -1,0 +1,30 @@
+# Backup Verification (Existence only)
+# On Monday, verify Friday backup file was created
+
+$TempInfo = ""
+
+$Date = (Get-Date).AddDays(-3) | Get-Date -UFormat %Y%m%d
+
+if ((Test-Path PATH_$Date.sql) -ne $True)
+{
+    $TempInfo += "Backup Failed`n"
+}
+# Full Website Backup Check
+$WebDate = (Get-Date).AddDays(-3) | Get-Date -Format M.d.yyyy
+
+if ((Test-Path PATH_$WebDate*) -ne $True)
+{
+    $TempInfo += "Full Website Backup Failed"
+}
+
+if ($TempInfo -ne "")
+{ 
+    $Email = New-Object -TypeName Net.Mail.MailMessage
+    $SMTP = New-Object -TypeName Net.Mail.SMTPClient("")
+    $Email.From = ""
+    $Email.To.Add("")
+    $Email.Subject = "Backup Failure(s)"
+    $Email.Body = $TempInfo
+
+    $SMTP.Send($Email)
+}
