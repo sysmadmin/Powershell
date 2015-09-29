@@ -14,6 +14,9 @@ param(
 
 $spreadsheet = Import-Csv 'PCList.csv'
 
-Write-Output $spreadsheet | ? {$_.comments -like "*$name*"} | select -prop name,comments
+$a = @{label='PC Name';expression={$_.Name}},@{label='Employee Name';expression={$_.comments}}
+
+
+Write-Output $spreadsheet | ? {$_.comments -like "*$name*"} | select -prop name,comments | Format-Table $a
 
 }
