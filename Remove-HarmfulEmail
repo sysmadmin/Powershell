@@ -1,0 +1,46 @@
+function Remove-HarmfulEmail{
+   
+    param(
+            
+        # Currently All/One-User works if you only type what you should, error handling needs to be added. **Ignores User in All (never called), and the -and operator in elseif statement skips One if User is null. 
+        # Also the ability to not allow User if All selected, and require User if One selected.
+        # Running on Exchange 2007, Powershell is complaining about the Mandatory Parameter tags...
+
+        [Parameter(Mandatory)]
+        [ValidateSet('ContentKeywords','SenderKeywords','SubjectKeywords')]
+        $KeywordType,
+        
+        [Parameter(Mandatory)]
+        $Keyword,
+
+        [switch]$AllMailboxes,
+        
+        #[Parameter(ParameterSetName='OneInbox',Mandatory=$False)]
+        [switch]$OneMailbox,
+        
+        #[Parameter(ParameterSetName='OneInbox',Mandatory=$True)]
+        [string]$User
+    
+    )
+
+    if ($AllMailboxes)
+    {
+        $EmailRemoval = "Get-Mailbox -Database 'MAILBOX_DATABASE_PATH' | Export-Mailbox -TargetMailbox SERVICES -TargetFolder EXPORT -$KeywordType '$Keyword' -DeleteContent -Confirm:`$false -BadItemLimit 10000 –IncludeFolders '\Inbox'"
+        #Invoke-Command $EmailRemoval
+        Write-Output $EmailRemoval
+    }
+    elseif (($OneMailbox) -and ($User))
+    {
+        $EmailRemoval = "Export-Mailbox -Identity DOMAIN\$User -TargetMailbox SERVICES -TargetFolder EXPORT -$KeywordType '$Keyword' -DeleteContent -Confirm:`$false -baditemlimit 10000 –IncludeFolders '\Inbox'"
+        #Invoke-Command $EmailRemoval
+        Write-Output $EmailRemoval
+    }
+    else
+    {
+        # Placeholder string
+        Write-Warning "Invalid Mailbox type"
+    }
+
+    # Write-Output $EmailRemoval
+
+}
