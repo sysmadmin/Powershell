@@ -1,0 +1,12 @@
+# Get the video card models off all org PCs... created after mass video card failure event
+
+$PCList = (Get-Content PCList.txt)
+$Output = New-Object -TypeName HashTable
+$OutputFormat = @{Label="PC Name";Expression={$_.Name}},@{Label="Video Card Models";Expression={$_.Value}}
+
+Foreach ($PC in $PCList)
+{
+    $Info = Invoke-Command -ComputerName $PC -ScriptBlock {Get-WmiObject win32_videocontroller | ? {$_.Description -ne "LogMeIn Mirror Driver"}}
+    $Output.Add($PC,$Info.Description)
+}
+Write-Output $Output | Format-Table $OutputFormat
