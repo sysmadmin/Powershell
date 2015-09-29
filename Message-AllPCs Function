@@ -2,12 +2,12 @@
 .EXAMPLE
 Message-ALLPCs.ps1 -Message "This is the text of your message"
 .PARAMETER Message
-The message that you would like to send to all of the PCs at R&I
+The message that you would like to send to all of the org PCs
 #>
 [CmdletBinding()]
 
 param(
-[Parameter(Mandatory=$True,HelpMessage="Enter the message you would like to appear on all ORG PCs")]
+[Parameter(Mandatory=$True,HelpMessage="Enter the message you would like to appear on all org PCs")]
 [string]$Message = "",
 
 [ValidateSet(2,3)]
@@ -15,7 +15,7 @@ param(
 )
 Write-Verbose "Retrieving PC list"
 
-$LIST = (Get-Content 'TXT FILE PATH')
+$LIST = (Get-Content 'PCList.txt')
 
 Write-Verbose "Sending messages"
 
