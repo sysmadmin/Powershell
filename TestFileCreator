@@ -1,0 +1,5 @@
+# Used to create multiple files with content for file/text manipulation testing
+
+Remove-Item -Path C:\Work_Area\Powershell\FileTests\*
+$i=1; while ($i -lt 51){New-Item -Path C:\Work_Area\Powershell\FileTests\ -ItemType File -Name "Test$i.txt";$i++}
+(Get-ChildItem C:\Work_Area\Powershell\FileTests\*)|Foreach{$i=1;while($i -lt 101){Add-Content -Value "Lorem Ipsum" -Path $_; $i++}}
