@@ -1,0 +1,18 @@
+function Get-PCUser {
+
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$True,Position=0)]
+        $Name,
+    [switch]$Full
+    )
+    
+    $pcList = Import-Csv *Path to user/PC sheet*
+
+    if ($Full){
+        Write-Output $pcList | Where-Object {$_.Comments -like "*$Name*"}
+    }
+    else{
+        Write-Output $pcList | Where-Object {$_.Comments -like "*$Name*"} | Select-Object Name,Comments
+    }
+}
